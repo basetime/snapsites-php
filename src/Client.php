@@ -68,29 +68,7 @@ class Client
    */
   public function screenshot(string $endpoint, ApiRequest $req)
   {
-    $body = [];
-    if ($req->url) {
-      $body['url'] = $req->url;
-    }
-    if ($req->html) {
-      $body['html'] = $req->html;
-    }
-    if ($req->type) {
-      $body['type'] = $req->type;
-    }
-    if ($req->options) {
-      $body['options'] = $req->options;
-    }
-
-    $client = new GuzzleClient();
-    $resp = $client->post(self::BASE_URL . '/' . $endpoint, [
-      RequestOptions::JSON => $body,
-      'headers' => [
-        'X-Api-Secret' => $this->apiSecret
-      ]
-    ]);
-
-    return json_decode($resp->getBody());
+    return $this->doRequest('POST', '/' . $endpoint, $this->createDefaultRequest($req));
   }
 
   /**
@@ -123,29 +101,75 @@ class Client
    * // }
    * ```
    *
-   * @param string endpoint The ID of the endpoint to use.
-   * @param ApiRequest[] req The details of the page to screenshot.
+   * @param string $endpoint The ID of the endpoint to use.
+   * @param ApiRequest[] $req The details of the page to screenshot.
    * @throws GuzzleException
    */
   public function batchScreenshots(string $endpoint, array $req)
   {
     $body = [];
     foreach ($req as $k => $r) {
-      $body[$k] = [
-        'url' => $r->url ?? '',
-        'type' => $r->type ?? '',
-        'options' => $r->options ?? [],
-      ];
+      $body[$k] = $this->createDefaultRequest($r);
     }
 
-    $client = new GuzzleClient();
-    $resp = $client->post(self::BASE_URL . '/' . $endpoint, [
-      RequestOptions::JSON => $body,
+    return $this->doRequest('POST', '/' . $endpoint, $body);
+  }
+
+  /**
+   * Gets the status of the given api request.
+   *
+   * @param string $endpoint The ID of the endpoint to use.
+   * @param string $id The ID of the request to get the status of.
+   * @return array
+   * @throws GuzzleException
+   */
+  public function status(string $endpoint, string $id): array
+  {
+    return $this->doRequest('GET', sprintf('/%s/status/%s', $endpoint, $id));
+  }
+
+  /**
+   * @throws GuzzleException
+   */
+  protected function doRequest(string $method, string $path, array $body = [])
+  {
+    $options = [
       'headers' => [
         'X-Api-Secret' => $this->apiSecret
       ]
-    ]);
+    ];
+    if ($body) {
+      $options[RequestOptions::JSON] = $body;
+    }
+
+    $client = new GuzzleClient();
+    $resp = $client->request($method, self::BASE_URL . $path, $options);
 
     return json_decode($resp->getBody());
+  }
+
+  /**
+   * Adds defaults to the given request and returns an array.
+   *
+   * @param ApiRequest $req The request to add defaults to.
+   * @return array
+   */
+  private function createDefaultRequest(ApiRequest $req): array
+  {
+    $body = [];
+    if ($req->url) {
+      $body['url'] = $req->url;
+    }
+    if ($req->html) {
+      $body['html'] = $req->html;
+    }
+    if ($req->type) {
+      $body['type'] = $req->type;
+    }
+    if ($req->options) {
+      $body['options'] = $req->options;
+    }
+
+    return $body;
   }
 }
