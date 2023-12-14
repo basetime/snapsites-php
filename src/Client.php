@@ -1,11 +1,13 @@
 <?php
-
 namespace Basetime\Snapsites;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 
+/**
+ * Client library that communicates with the Snapsites API.
+ */
 class Client
 {
   const BASE_URL = 'http://dev-api.snapsites.io';
