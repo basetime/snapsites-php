@@ -1,0 +1,19 @@
+{
+    "name": "basetime/snapsites",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Basetime\\Snapsites\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Sean Hickey",
+            "email": "sean.hickey@avagate.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "guzzlehttp/guzzle": "^7.0"
+    }
+}
