@@ -17,7 +17,7 @@ class Client
    *
    * @var string
    */
-  protected string $apiSecret;
+  protected $apiSecret;
 
   /**
    * Constructor.
@@ -34,6 +34,7 @@ class Client
    *
    * ```php
    * $resp = $client->screenshot('dyNmcmgxd4BFmuffdwCBV0', [
+   *    'browser': 'chromium',
    *    'url': 'https://avagate.com',
    *    'type': 'jpg',
    * ]);
@@ -45,10 +46,10 @@ class Client
    * //   status: 'https://api.snapsites.io/status/7473bbe4-b2bf-4858-9a9c-476d302df5b9',
    * //   cost: -0.2,
    * //   balance: 1000,
-   * //   images: {
-   * //     '0': 'https://api.snapsites.io/image/123.jpg'
-   * //   },
-   * //   pdfs: {}
+   * //   images: [
+   * //     'https://api.snapsites.io/image/123.jpg'
+   * //   ],
+   * //   pdfs: []
    * // }
    * ```
    *
@@ -157,6 +158,9 @@ class Client
   private function createDefaultRequest(ApiRequest $req): array
   {
     $body = [];
+    if ($req->browser) {
+      $body['browser'] = $req->browser;
+    }
     if ($req->url) {
       $body['url'] = $req->url;
     }

@@ -7,44 +7,54 @@ namespace Basetime\Snapsites;
  */
 class ApiRequest
 {
-    /**
-     * The URL of the page to take a screenshot of.
-     */
-    public string $url = '';
+  /**
+   * The browser to use.
+   *
+   * Possible values are 'chromium', 'firefox', 'webkit'.
+   */
+  public $browser = 'chromium';
 
-    /**
-     * The HTML of the page to take a screenshot of.
-     */
-    public string $html = '';
+  /**
+   * The URL of the page to take a screenshot of.
+   */
+  public $url = '';
 
-    /**
-     * The type of the file to be generated.
-     */
-    public string $type = '';
+  /**
+   * The HTML of the page to take a screenshot of.
+   */
+  public $html = '';
 
-    /**
-     * Additional options passed to the integrations.
-     */
-    public array $options = [];
+  /**
+   * The type of the file to be generated.
+   */
+  public $type = '';
 
-    /**
-     * Constructor.
-     *
-     * @param array $options
-     */
-    public function __construct(array $options)
-    {
-        if (isset($options['url'])) {
-            $this->url = $options['url'];
-        }
-        if (isset($options['html'])) {
-            $this->html = $options['html'];
-        }
-        if (isset($options['type'])) {
-            $this->type = $options['type'];
-        }
-        if (isset($options['options'])) {
-            $this->options = $options['options'];
-        }
+  /**
+   * Additional options passed to the integrations.
+   */
+  public $options = [];
+
+  /**
+   * Constructor.
+   *
+   * @param array $options
+   */
+  public function __construct(array $options)
+  {
+    if (isset($options['browser'])) {
+      $this->browser = $options['browser'];
     }
+    if (isset($options['url'])) {
+      $this->url = $options['url'];
+    }
+    if (isset($options['html'])) {
+      $this->html = $options['html'];
+    }
+    if (isset($options['type'])) {
+      $this->type = $options['type'];
+    }
+    if (isset($options['options'])) {
+      $this->options = $options['options'];
+    }
+  }
 }

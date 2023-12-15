@@ -1,19 +1,25 @@
 {
-    "name": "basetime/snapsites",
-    "type": "library",
-    "autoload": {
-        "psr-4": {
-            "Basetime\\Snapsites\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Sean Hickey",
-            "email": "sean.hickey@avagate.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "guzzlehttp/guzzle": "^7.0"
+  "name": "basetime/snapsites",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "Basetime\\Snapsites\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "Sean Hickey",
+      "email": "sean.hickey@avagate.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "config": {
+    "platform": {
+      "php": "7.2"
+    }
+  },
+  "require": {
+    "guzzlehttp/guzzle": "^7.0",
+    "ext-json": "*"
+  }
 }

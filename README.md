@@ -10,14 +10,15 @@ Making a single request.
 ```php
 <?php
 use Basetime\Snapsites\Client;
+use Basetime\Snapsites\ApiRequest;
 
 $apiSecret = '123';
 $endpoint = 'dyNmcmgxd4BFmuffdwCBV0';
 $client = new Client($apiSecret);
-$resp = $client->screenshot($endpoint, [
+$resp = $client->screenshot($endpoint, new ApiRequest([
     'url': 'https://avagate.com',
     'type': 'jpg',
-]);
+]));
 echo json_encode($resp);
 ```
 
@@ -29,10 +30,10 @@ Outputs:
   "cost": -0.1,
   "balance": 9492.2,
   "status": "http://api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/1917c524-044d-456b-b7af-4397499dade8",
-  "images": {
-    "0": "https://storage.googleapis.com/cdn_snapsites_io/rhsV7rpKEyb6Ng1KxiDupA.jpeg"
-  },
-  "pdfs": {}
+  "images": [
+    "https://storage.googleapis.com/cdn_snapsites_io/rhsV7rpKEyb6Ng1KxiDupA.jpeg"
+  ],
+  "pdfs": []
 }
 ```
 
@@ -41,19 +42,22 @@ Making multiple requests at once.
 ```php
 <?php
 use Basetime\Snapsites\Client;
+use Basetime\Snapsites\ApiRequest;
 
-    $apiSecret = '123';
+$apiSecret = '123';
 $endpoint = 'dyNmcmgxd4BFmuffdwCBV0';
 $client = new Client($apiSecret);
 $resp = $client->batchScreenshots($endpoint, [
-    'first' => [
+    new ApiRequest([
+        'browser': 'firefox',
         'url': 'https://avagate.com',
         'type': 'jpg',
-    ],
-    'second' => [
+    ]),
+    new ApiRequest([
+        'browser': 'webkit',
         'url': 'https://google.com',
         'type': 'jpg',
-    ],
+    ]),
 ]);
 echo json_encode($resp);
 ```
@@ -66,10 +70,10 @@ Outputs:
   "cost": -0.1,
   "balance": 9492.2,
   "status": "http://api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/1917c524-044d-456b-b7af-4397499dade8",
-  "images": {
-    "first": "https://storage.googleapis.com/cdn_snapsites_io/rhsV7rpKEyb6Ng1KxiDupA.jpeg",
-    "second": "https://storage.googleapis.com/cdn_snapsites_io/5hsp4rpKEyb6Ng1KxiDupd.jpeg"
-  },
-  "pdfs": {}
+  "images": [
+    "https://storage.googleapis.com/cdn_snapsites_io/rhsV7rpKEyb6Ng1KxiDupA.jpeg",
+    "https://storage.googleapis.com/cdn_snapsites_io/5hsp4rpKEyb6Ng1KxiDupd.jpeg"
+  ],
+  "pdfs": []
 }
 ```
