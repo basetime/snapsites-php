@@ -65,11 +65,16 @@ class Client
    *
    * @param string $endpoint The ID of the endpoint to use.
    * @param ApiRequest $req The details of the page to screenshot.
+   * @param bool $wait Whether to wait for the request to complete.
    * @throws GuzzleException
    */
-  public function screenshot(string $endpoint, ApiRequest $req)
+  public function screenshot(string $endpoint, ApiRequest $req, bool $wait = true)
   {
-    return $this->doRequest('POST', '/' . $endpoint, $this->createDefaultRequest($req));
+    return $this->doRequest(
+      'POST',
+      sprintf('/%s?wait=%s', $endpoint, $wait ? '1' : '0'),
+      $this->createDefaultRequest($req)
+    );
   }
 
   /**
@@ -104,16 +109,21 @@ class Client
    *
    * @param string $endpoint The ID of the endpoint to use.
    * @param ApiRequest[] $req The details of the page to screenshot.
+   * @param bool $wait Whether to wait for the request to complete.
    * @throws GuzzleException
    */
-  public function batchScreenshots(string $endpoint, array $req)
+  public function batchScreenshots(string $endpoint, array $req, bool $wait = true)
   {
     $body = [];
     foreach ($req as $k => $r) {
       $body[$k] = $this->createDefaultRequest($r);
     }
 
-    return $this->doRequest('POST', '/' . $endpoint, $body);
+    return $this->doRequest(
+      'POST',
+      sprintf('/%s?wait=%s', $endpoint, $wait ? '1' : '0'),
+      $body
+    );
   }
 
   /**

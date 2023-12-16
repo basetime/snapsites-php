@@ -77,3 +77,31 @@ Outputs:
   "pdfs": []
 }
 ```
+
+Use the `$wait` parameter to wait for the request to complete.
+
+```php
+$apiSecret = '123';
+$endpoint = 'dyNmcmgxd4BFmuffdwCBV0';
+$wait = false;
+
+$client = new Client($apiSecret);
+$resp = $client->screenshot($endpoint, new ApiRequest([
+    'url': 'https://avagate.com',
+    'type': 'jpg',
+]), $wait);
+echo json_encode($resp);
+```
+
+Response:
+```json
+{
+  "id": "1917c524-044d-456b-b7af-4397499dade8",
+  "time": 13085,
+  "cost": -0.1,
+  "balance": 9492.2,
+  "status": "http://api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/1917c524-044d-456b-b7af-4397499dade8"
+}
+```
+
+Use the `status` endpoint to poll for the status of the request.
