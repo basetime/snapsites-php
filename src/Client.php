@@ -1,6 +1,7 @@
 <?php
 namespace Basetime\Snapsites;
 
+use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
@@ -20,30 +21,40 @@ class Client
   protected $apiSecret;
 
   /**
+   * Whether to wait for requests to complete.
+   *
+   * @var bool
+   */
+  protected $wait = true;
+
+  /**
    * Constructor.
    *
    * @param string $apiSecret
+   * @param bool $wait
    */
-  public function __construct(string $apiSecret)
+  public function __construct(string $apiSecret, bool $wait = true)
   {
     $this->apiSecret = $apiSecret;
+    $this->wait = $wait;
   }
 
   /**
    * Takes a screenshot of a page.
    *
    * ```php
-   * $resp = $client->screenshot('dyNmcmgxd4BFmuffdwCBV0', [
+   * $resp = $client->screenshot('dyNmcmgxd4BFmuffdwCBV0', new ApiRequest([
    *    'browser': 'chromium',
    *    'url': 'https://avagate.com',
    *    'type': 'jpg',
-   * ]);
+   * ]));
    * console.log(resp);
    *
    * // {
    * //   id: '7473bbe4-b2bf-4858-9a9c-476d302df5b9',
    * //   time: 11094,
    * //   status: 'https://api.snapsites.io/status/7473bbe4-b2bf-4858-9a9c-476d302df5b9',
+   * //   errors: [],
    * //   cost: -0.2,
    * //   balance: 1000,
    * //   images: [
@@ -65,16 +76,17 @@ class Client
    *
    * @param string $endpoint The ID of the endpoint to use.
    * @param ApiRequest $req The details of the page to screenshot.
-   * @param bool $wait Whether to wait for the request to complete.
    * @throws GuzzleException
    */
-  public function screenshot(string $endpoint, ApiRequest $req, bool $wait = true)
+  public function screenshot(string $endpoint, ApiRequest $req): ApiResponse
   {
-    return $this->doRequest(
+    $resp = $this->doRequest(
       'POST',
-      sprintf('/%s?wait=%s', $endpoint, $wait ? '1' : '0'),
+      sprintf('/%s?wait=%s', $endpoint, $this->wait ? '1' : '0'),
       $this->createDefaultRequest($req)
     );
+
+    return new ApiResponse($resp);
   }
 
   /**
@@ -82,14 +94,14 @@ class Client
    *
    * ```php
    * $resp = $client->screenshot('dyNmcmgxd4BFmuffdwCBV0', [
-   *    'splash-1': [
+   *    new ApiRequest([
    *      url: 'https://avagate.com/splash-1',
    *      type: 'jpg',
-   *    ],
-   *    'splash-2': [
+   *    ]),
+   *    new ApiRequest([
    *      url: 'https://avagate.com/splash-2',
    *      type: 'jpg',
-   *    ],
+   *    ]),
    * ]);
    * console.log(resp);
    *
@@ -97,33 +109,34 @@ class Client
    * //   id: '7473bbe4-b2bf-4858-9a9c-476d302df5b9',
    * //   time: 11094,
    * //   status: 'https://api.snapsites.io/status/7473bbe4-b2bf-4858-9a9c-476d302df5b9',
+   * //   errors: [],
    * //   cost: -0.2,
    * //   balance: 1000,
-   * //   images: {
-   * //     'splash-1': 'https://api.snapsites.io/image/123.jpg',
-   * //     'splash-2': 'https://api.snapsites.io/image/456.jpg',
-   * //   },
-   * //   pdfs: {}
+   * //   images: [
+   * //     'https://api.snapsites.io/image/123.jpg',
+   * //     'https://api.snapsites.io/image/456.jpg',
+   * //   ],
+   * //   pdfs: []
    * // }
    * ```
    *
    * @param string $endpoint The ID of the endpoint to use.
    * @param ApiRequest[] $req The details of the page to screenshot.
-   * @param bool $wait Whether to wait for the request to complete.
    * @throws GuzzleException
    */
-  public function batchScreenshots(string $endpoint, array $req, bool $wait = true)
+  public function batchScreenshots(string $endpoint, array $req): ApiResponse
   {
     $body = [];
     foreach ($req as $k => $r) {
       $body[$k] = $this->createDefaultRequest($r);
     }
-
-    return $this->doRequest(
+    $resp = $this->doRequest(
       'POST',
-      sprintf('/%s?wait=%s', $endpoint, $wait ? '1' : '0'),
+      sprintf('/%s?wait=%s', $endpoint, $this->wait ? '1' : '0'),
       $body
     );
+
+    return new ApiResponse($resp);
   }
 
   /**
@@ -131,12 +144,15 @@ class Client
    *
    * @param string $endpoint The ID of the endpoint to use.
    * @param string $id The ID of the request to get the status of.
-   * @return array
+   * @return ApiStatus
    * @throws GuzzleException
+   * @throws Exception
    */
-  public function status(string $endpoint, string $id): array
+  public function status(string $endpoint, string $id): ApiStatus
   {
-    return $this->doRequest('GET', sprintf('/%s/status/%s', $endpoint, $id));
+    $resp = $this->doRequest('GET', sprintf('/%s/status/%s', $endpoint, $id));
+
+    return new ApiStatus($resp);
   }
 
   /**
@@ -156,7 +172,7 @@ class Client
     $client = new GuzzleClient();
     $resp = $client->request($method, self::BASE_URL . $path, $options);
 
-    return json_decode($resp->getBody());
+    return json_decode($resp->getBody(), true);
   }
 
   /**
