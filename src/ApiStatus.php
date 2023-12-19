@@ -19,12 +19,17 @@ class ApiStatus {
   public string $status;
 
   /**
+   * @var string
+   */
+  public string $beaconUri;
+
+  /**
    * @var int
    */
   public int $currentStep;
 
   /**
-   * @var
+   * @var int
    */
   public int $totalSteps;
 
@@ -74,6 +79,7 @@ class ApiStatus {
     $this->validate($data);
     $this->id = $data['id'];
     $this->status = $data['status'];
+    $this->beaconUri = $data['beaconUri'];
     $this->currentStep = $data['currentStep'];
     $this->totalSteps = $data['totalSteps'];
     $this->cost = $data['cost'];
@@ -92,11 +98,12 @@ class ApiStatus {
    * @return void
    * @throws Exception
    */
-  private function validate(array $data)
+  private function validate(array $data): void
   {
     $required = [
       'id',
       'status',
+      'beaconUri',
       'currentStep',
       'totalSteps',
       'cost',

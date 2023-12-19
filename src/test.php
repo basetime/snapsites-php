@@ -19,7 +19,7 @@ try {
   /**
    * @var Beacon[] $beacons
    */
-  $result = $client->onBeacon($resp->beacon, function (array $beacons) {
+  $result = $client->onBeacon($resp->beaconUri, function (array $beacons) {
     dump($beacons);
     $done = 0;
     foreach($beacons as $beacon) {

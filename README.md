@@ -28,7 +28,8 @@ Basetime\Snapsites\ApiResponse Object
 (
     [id] => 9828e8f1-61e5-42ba-8ac6-665e539c78d4
     [time] => 9037
-    [status] => http://dev-api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/9828e8f1-61e5-42ba-8ac6-665e539c78d4
+    [statusUri] => http://dev-api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/9828e8f1-61e5-42ba-8ac6-665e539c78d4
+    [beaconUri] => endpoints/dyNmcmgxd4BFmuffdwCBV0-8HcF7rATDipE4c5PCiL3q3-64zwGRCZindv5UXBXtc4fv
     [errors] => []
     [cost] => -0.2
     [balance] => 39.5
@@ -70,7 +71,8 @@ Basetime\Snapsites\ApiResponse Object
 (
     [id] => 9828e8f1-61e5-42ba-8ac6-665e539c78d4
     [time] => 9037
-    [status] => http://dev-api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/9828e8f1-61e5-42ba-8ac6-665e539c78d4
+    [statusUri] => http://dev-api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/9828e8f1-61e5-42ba-8ac6-665e539c78d4
+    [beaconUri] => endpoints/dyNmcmgxd4BFmuffdwCBV0-8HcF7rATDipE4c5PCiL3q3-64zwGRCZindv5UXBXtc4fv
     [errors] => []
     [cost] => -0.2
     [balance] => 39.5
@@ -106,6 +108,7 @@ Basetime\Snapsites\ApiStatus Object
   [cost]: -0.1
   [balance]: 9492.2
   [status]: http://api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/1917c524-044d-456b-b7af-4397499dade8
+  [beaconUri]: endpoints/dyNmcmgxd4BFmuffdwCBV0-8HcF7rATDipE4c5PCiL3q3-64zwGRCZindv5UXBXtc4fv
 )
 ```
 

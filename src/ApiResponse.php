@@ -18,12 +18,12 @@ class ApiResponse {
   /**
    * The status of the request.
    */
-  public string $status;
+  public string $statusUri;
 
   /**
    * URI of the beacon to get status updates.
    */
-  public string $beacon;
+  public string $beaconUri;
 
   /**
    * The errors that occurred during the request.
@@ -60,8 +60,8 @@ class ApiResponse {
     $this->validate($data);
     $this->id = $data['id'];
     $this->time = $data['time'];
-    $this->status = $data['status'];
-    $this->beacon = $data['beacon'];
+    $this->statusUri = $data['statusUri'];
+    $this->beaconUri = $data['beaconUri'];
     $this->errors = $data['errors'];
     $this->cost = $data['cost'];
     $this->balance = $data['balance'];
@@ -80,8 +80,8 @@ class ApiResponse {
     $required = [
       'id',
       'time',
-      'status',
-      'beacon',
+      'statusUri',
+      'beaconUri',
       'errors',
       'cost',
       'balance'
