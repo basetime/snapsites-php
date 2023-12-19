@@ -5,6 +5,8 @@ use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
+use Kreait\Firebase\Contract\Database;
+use Kreait\Firebase\Factory;
 
 /**
  * Client library that communicates with the Snapsites API.
@@ -15,17 +17,18 @@ class Client
 
   /**
    * The API secret created when the endpoint was created.
-   *
-   * @var string
    */
-  protected $apiSecret;
+  protected string $apiSecret;
 
   /**
    * Whether to wait for requests to complete.
-   *
-   * @var bool
    */
-  protected $wait = true;
+  protected bool $wait = true;
+
+  /**
+   * Whether to enable debugging.
+   */
+  protected bool $debugging = false;
 
   /**
    * Constructor.
@@ -37,6 +40,17 @@ class Client
   {
     $this->apiSecret = $apiSecret;
     $this->wait = $wait;
+  }
+
+  /**
+   * Sets whether debugging is enabled.
+   *
+   * @param bool $debugging
+   * @return void
+   */
+  public function setDebugging(bool $debugging): void
+  {
+    $this->debugging = $debugging;
   }
 
   /**
@@ -153,6 +167,57 @@ class Client
     $resp = $this->doRequest('GET', sprintf('/%s/status/%s', $endpoint, $id));
 
     return new ApiStatus($resp);
+  }
+
+  /**
+   * Listens for beacons and calls the given callback when a beacon is received.
+   *
+   * The callback will be called with an array of beacons. The callback should
+   * return a truthy value to stop listening.
+   *
+   * @param string $uri The beacon uri.
+   * @param callable $callback The callback to call when a beacon is received.
+   * @return mixed
+   * @throws GuzzleException
+   * @throws Exception
+   */
+  public function onBeacon(string $uri, callable $callback): mixed
+  {
+    $query = '';
+    $baseUrl = $this->debugging
+      ? 'http://localhost:9000?ns=telliclick-master'
+      : 'https://snapsites.firebaseio.com';
+    if (str_contains($baseUrl, '?')) {
+      $query = substr($baseUrl, strpos($baseUrl, '?'));
+      $baseUrl = substr($baseUrl, 0, strpos($baseUrl, '?'));
+    }
+
+    $last = '';
+    $result = null;
+    $client = new GuzzleClient();
+
+    do {
+      $resp = $client->request('GET', $baseUrl . '/' . $uri . '.json' . $query);
+      $body = (string)$resp->getBody();
+      if ($body !== $last) {
+        $last = $body;
+
+        $data = json_decode($body, true);
+        $beacons = [];
+        foreach($data as $d) {
+          $beacons[] = new Beacon($d);
+        }
+
+        // Any truthy value returned from the callback will stop the loop.
+        $result = $callback($beacons);
+        if ($result) {
+          break;
+        }
+      }
+      sleep(3);
+    } while(true);
+
+    return $result;
   }
 
   /**

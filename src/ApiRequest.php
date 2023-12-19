@@ -11,27 +11,27 @@ class ApiRequest
    *
    * Possible values are 'chromium', 'firefox', 'webkit'.
    */
-  public $browser = 'chromium';
+  public string $browser = 'chromium';
 
   /**
    * The URL of the page to take a screenshot of.
    */
-  public $url = '';
+  public string $url = '';
 
   /**
    * The HTML of the page to take a screenshot of.
    */
-  public $html = '';
+  public string $html = '';
 
   /**
    * The type of the file to be generated.
    */
-  public $type = '';
+  public string $type = '';
 
   /**
    * Additional options passed to the integrations.
    */
-  public $options = [];
+  public array $options = [];
 
   /**
    * Constructor.

@@ -7,59 +7,48 @@ namespace Basetime\Snapsites;
 class ApiResponse {
   /**
    * The ID of the request.
-   *
-   * @var string
    */
-  public $id;
+  public string $id;
 
   /**
    * The time it took to complete the request.
-   *
-   * @var int
    */
-  public $time;
+  public int $time;
 
   /**
    * The status of the request.
-   *
-   * @var string
    */
-  public $status;
+  public string $status;
+
+  /**
+   * URI of the beacon to get status updates.
+   */
+  public string $beacon;
 
   /**
    * The errors that occurred during the request.
-   *
-   * @var array
    */
-  public $errors;
+  public array $errors;
 
   /**
    * The cost of the request.
-   *
-   * @var float
    */
-  public $cost;
+  public float $cost;
 
   /**
    * The balance of the account.
-   *
-   * @var float
    */
-  public $balance;
+  public float $balance;
 
   /**
    * The images that were generated.
-   *
-   * @var array
    */
-  public $images;
+  public array $images;
 
   /**
    * The PDFs that were generated.
-   *
-   * @var array
    */
-  public $pdfs;
+  public array $pdfs;
 
   /**
    * Constructor.
@@ -72,11 +61,12 @@ class ApiResponse {
     $this->id = $data['id'];
     $this->time = $data['time'];
     $this->status = $data['status'];
+    $this->beacon = $data['beacon'];
     $this->errors = $data['errors'];
     $this->cost = $data['cost'];
     $this->balance = $data['balance'];
-    $this->images = $data['images'];
-    $this->pdfs = $data['pdfs'];
+    $this->images = $data['images'] ?? [];
+    $this->pdfs = $data['pdfs'] ?? [];
   }
 
   /**
@@ -91,11 +81,10 @@ class ApiResponse {
       'id',
       'time',
       'status',
+      'beacon',
       'errors',
       'cost',
-      'balance',
-      'images',
-      'pdfs',
+      'balance'
     ];
     foreach($required as $key) {
       if (!isset($data[$key])) {

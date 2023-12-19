@@ -11,47 +11,47 @@ class ApiStatus {
   /**
    * @var string
    */
-  public $id;
+  public string $id;
 
   /**
    * @var string
    */
-  public $status;
+  public string $status;
 
   /**
    * @var int
    */
-  public $currentStep;
+  public int $currentStep;
 
   /**
    * @var
    */
-  public $totalSteps;
+  public int $totalSteps;
 
   /**
    * @var float
    */
-  public $cost;
+  public float $cost;
 
   /**
    * @var DateTime
    */
-  public $createdAt;
+  public DateTime $createdAt;
 
   /**
    * @var DateTime
    */
-  public $completedAt;
-
-  /**
-   * @var
-   */
-  public $logs;
+  public DateTime $completedAt;
 
   /**
    * @var array
    */
-  public $request;
+  public array $logs;
+
+  /**
+   * @var array
+   */
+  public array $request;
 
   /**
    * @var string[]
