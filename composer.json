@@ -21,7 +21,6 @@
   "require": {
     "guzzlehttp/guzzle": "^7.0",
     "ext-json": "*",
-    "kreait/firebase-php": "7.x-dev",
     "symfony/var-dumper": "6.4.x-dev"
   }
 }
