@@ -6,7 +6,7 @@ use Basetime\Snapsites\Client;
 use Basetime\Snapsites\ApiRequest;
 use GuzzleHttp\Exception\GuzzleException;
 
-$client = new Client('123', false);
+$client = new Client('123');
 $client->setDebugging(true);
 try {
   $resp = $client->screenshot('dyNmcmgxd4BFmuffdwCBV0', new ApiRequest([

@@ -4,6 +4,13 @@ PHP client library for using Snapsites.io.
 
 Making a request to the Snapsites API requires an API key and secret. You can get these from the [Snapsites dashboard](https://snapsites.io/dashboard).
 
+## Installation
+Use Composer to install the library.
+
+```bash
+composer require basetime/snapsites-php
+```
+
 ## Usage
 Making a single request.
 
@@ -15,7 +22,7 @@ use Basetime\Snapsites\ApiRequest;
 $apiSecret = '123';
 $endpoint = 'dyNmcmgxd4BFmuffdwCBV0';
 $client = new Client($apiSecret);
-$resp = $client->screenshot($endpoint, new ApiRequest([
+$resp = $client->screenshotWait($endpoint, new ApiRequest([
     'url': 'https://avagate.com',
     'type': 'jpg',
 ]));
@@ -50,7 +57,7 @@ use Basetime\Snapsites\ApiRequest;
 $apiSecret = '123';
 $endpoint = 'dyNmcmgxd4BFmuffdwCBV0';
 $client = new Client($apiSecret);
-$resp = $client->batchScreenshots($endpoint, [
+$resp = $client->batchScreenshotsWait($endpoint, [
     new ApiRequest([
         'browser': 'firefox',
         'url': 'https://avagate.com',
@@ -84,19 +91,33 @@ Basetime\Snapsites\ApiResponse Object
 )
 ```
 
-Use the `$wait` parameter to wait for the request to complete.
+Instead of waiting for snapsites to finish generating the screenshot, you can poll for the status of the request or use the beaconUri.
 
 ```php
 $apiSecret = '123';
 $endpoint = 'dyNmcmgxd4BFmuffdwCBV0';
-$wait = false;
-
-$client = new Client($apiSecret, $wait);
+$client = new Client($apiSecret);
 $resp = $client->screenshot($endpoint, new ApiRequest([
     'url': 'https://avagate.com',
     'type': 'jpg',
 ]));
 echo json_encode($resp);
+
+/**
+* @var Beacon[] $beacons
+*/
+$result = $client->onBeacon($resp->beaconUri, function (array $beacons) {
+    dump($beacons);
+    $done = 0;
+    foreach($beacons as $beacon) {
+      if ($beacon->status === 'success') {
+        $done++;
+      }
+    }
+    if ($done === count($beacons)) {
+      return true;
+    }
+});
 ```
 
 Response:
@@ -110,6 +131,41 @@ Basetime\Snapsites\ApiStatus Object
   [status]: http://api.snapsites.io/dyNmcmgxd4BFmuffdwCBV0/status/1917c524-044d-456b-b7af-4397499dade8
   [beaconUri]: endpoints/dyNmcmgxd4BFmuffdwCBV0-8HcF7rATDipE4c5PCiL3q3-64zwGRCZindv5UXBXtc4fv
 )
-```
 
-Use the `status` endpoint to poll for the status of the request.
+[ { message: 'Starting', updatedAt: '2023-12-18T19:22:20.461Z' } ]
+[
+  {
+    message: 'Injecting script.',
+    status: 'running',
+    updatedAt: '2023-12-18T19:22:21.251Z'
+  }
+]
+[
+  {
+    message: 'Applying watermark.',
+    status: 'running',
+    updatedAt: '2023-12-18T19:22:29.006Z'
+  }
+]
+[
+  {
+    message: 'Uploading to Google Cloud Storage',
+    status: 'running',
+    updatedAt: '2023-12-18T19:22:30.399Z'
+  }
+]
+[
+  {
+    message: 'Saved in bucket cdn_snapsites_io',
+    status: 'running',
+    updatedAt: '2023-12-18T19:22:32.819Z'
+  }
+]
+[
+  {
+    message: 'Finished.',
+    status: 'finished',
+    updatedAt: '2023-12-18T19:22:34.823Z'
+  }
+]
+```
