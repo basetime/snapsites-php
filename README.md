@@ -8,7 +8,7 @@ Making a request to the Snapsites API requires an API key and secret. You can ge
 Use Composer to install the library.
 
 ```bash
-composer require basetime/snapsites-php
+composer require basetime/snapsites
 ```
 
 ## Usage
