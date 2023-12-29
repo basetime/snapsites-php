@@ -20,6 +20,16 @@ class Beacon
   public string $status;
 
   /**
+   * The current step.
+   */
+  public int $currentStep;
+
+  /**
+   * The total steps.
+   */
+  public int $totalSteps;
+
+  /**
    * Additional data.
    */
   public mixed $data;
@@ -37,6 +47,8 @@ class Beacon
     $this->validate($data);
     $this->message = $data['message'];
     $this->status = $data['status'];
+    $this->currentStep = $data['currentStep'] ?? 0;
+    $this->totalSteps = $data['totalSteps'] ?? 0;
     $this->data = $data['data'] ?? null;
     $this->updatedAt = new DateTime($data['updatedAt']);
   }
@@ -56,6 +68,12 @@ class Beacon
     }
     if (!isset($data['status'])) {
       throw new Exception('Missing status');
+    }
+    if (!isset($data['currentStep'])) {
+      throw new Exception('Missing currentStep');
+    }
+    if (!isset($data['totalSteps'])) {
+      throw new Exception('Missing totalSteps');
     }
     if (!isset($data['updatedAt'])) {
       throw new Exception('Missing updatedAt');
