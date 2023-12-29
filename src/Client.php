@@ -222,6 +222,26 @@ class Client
   }
 
   /**
+   * Gets the status of all api requests.
+   *
+   * @param string $endpoint The ID of the endpoint to use.
+   * @param int $limit The number of statuses to return.
+   * @param int $offset The offset to start at.
+   * @throws GuzzleException
+   * @throws Exception
+   */
+  public function statusAll(string $endpoint, int $limit = 25, int $offset = 0): array
+  {
+    $resp = $this->doRequest('GET', sprintf('/%s/status?limit=%d&offset=%d', $endpoint, $limit, $offset));
+    $statuses = [];
+    foreach($resp as $data) {
+      $statuses[] = new PartialApiStatus($data);
+    }
+
+    return $statuses;
+  }
+
+  /**
    * Listens for beacons and calls the given callback when a beacon is received.
    *
    * The callback will be called with an array of beacons. The callback should
