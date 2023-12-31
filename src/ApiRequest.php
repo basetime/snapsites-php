@@ -34,6 +34,14 @@ class ApiRequest
   public array $options = [];
 
   /**
+   * User supplied metadata that will be a part of the api status.
+   *
+   * Used by clients to pass along a unique value that they need to associate with the request. They
+   * can then find this value in the status response.
+   */
+  public string $meta = '';
+
+  /**
    * Constructor.
    *
    * @param array $options
@@ -54,6 +62,9 @@ class ApiRequest
     }
     if (isset($options['options'])) {
       $this->options = $options['options'];
+    }
+    if (isset($options['meta'])) {
+      $this->meta = $options['meta'];
     }
   }
 }

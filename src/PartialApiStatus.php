@@ -42,6 +42,11 @@ class PartialApiStatus
   public float $cost;
 
   /**
+   * @var string
+   */
+  public string $meta;
+
+  /**
    * @var DateTime
    */
   public DateTime $createdAt;
@@ -54,12 +59,12 @@ class PartialApiStatus
   /**
    * @var string[]
    */
-  public $images;
+  public array $images;
 
   /**
    * @var string[]
    */
-  public $pdfs;
+  public array $pdfs;
 
   /**
    * Constructor.
@@ -76,6 +81,7 @@ class PartialApiStatus
     $this->currentStep = $data['currentStep'];
     $this->totalSteps = $data['totalSteps'];
     $this->cost = $data['cost'];
+    $this->meta = $data['meta'];
     $this->createdAt = new DateTime($data['createdAt']);
     $this->completedAt = new DateTime($data['completedAt']);
     $this->images = $data['images'];
@@ -98,6 +104,7 @@ class PartialApiStatus
       'currentStep',
       'totalSteps',
       'cost',
+      'meta',
       'createdAt',
       'completedAt',
       'images',

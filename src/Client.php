@@ -257,7 +257,7 @@ class Client
   {
     $query = '';
     $baseUrl = $this->debugging
-      ? 'http://localhost:9000?ns=telliclick-master'
+      ? 'http://localhost:9100?ns=telliclick-master'
       : 'https://snapsites.firebaseio.com';
     if (str_contains($baseUrl, '?')) {
       $query = substr($baseUrl, strpos($baseUrl, '?'));
@@ -334,6 +334,9 @@ class Client
     }
     if ($req->options) {
       $body['options'] = $req->options;
+    }
+    if ($req->meta) {
+      $body['meta'] = $req->meta;
     }
 
     return $body;

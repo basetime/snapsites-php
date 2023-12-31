@@ -13,6 +13,7 @@ try {
     'browser' => 'chromium',
     'url' => 'https://avagate.com',
     'type' => 'jpg',
+    'meta' => 'hello_world'
   ]));
   dump($resp);
 

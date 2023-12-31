@@ -51,6 +51,14 @@ class ApiResponse {
   public array $pdfs;
 
   /**
+   * User supplied metadata that will be a part of the api status.
+   *
+   * Used by clients to pass along a unique value that they need to associate with the request. They
+   * can then find this value in the status response.
+   */
+  public string $meta;
+
+  /**
    * Constructor.
    *
    * @param array $data
@@ -64,6 +72,7 @@ class ApiResponse {
     $this->beaconUri = $data['beaconUri'];
     $this->errors = $data['errors'];
     $this->cost = $data['cost'];
+    $this->meta = $data['meta'];
     $this->balance = $data['balance'];
     $this->images = $data['images'] ?? [];
     $this->pdfs = $data['pdfs'] ?? [];
@@ -75,11 +84,12 @@ class ApiResponse {
    * @param array $data
    * @return void
    */
-  private function validate(array $data)
+  private function validate(array $data): void
   {
     $required = [
       'id',
       'time',
+      'meta',
       'statusUri',
       'beaconUri',
       'errors',

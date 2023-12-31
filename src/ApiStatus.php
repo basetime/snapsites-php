@@ -39,6 +39,11 @@ class ApiStatus {
   public float $cost;
 
   /**
+   * @var string
+   */
+  public string $meta;
+
+  /**
    * @var DateTime
    */
   public DateTime $createdAt;
@@ -61,12 +66,12 @@ class ApiStatus {
   /**
    * @var string[]
    */
-  public $images;
+  public array $images;
 
   /**
    * @var string[]
    */
-  public $pdfs;
+  public array $pdfs;
 
   /**
    * Constructor.
@@ -82,6 +87,7 @@ class ApiStatus {
     $this->beaconUri = $data['beaconUri'];
     $this->currentStep = $data['currentStep'];
     $this->totalSteps = $data['totalSteps'];
+    $this->meta = $data['meta'];
     $this->cost = $data['cost'];
     $this->createdAt = new DateTime($data['createdAt']);
     $this->completedAt = new DateTime($data['completedAt']);
@@ -107,6 +113,7 @@ class ApiStatus {
       'currentStep',
       'totalSteps',
       'cost',
+      'meta',
       'createdAt',
       'completedAt',
       'logs',

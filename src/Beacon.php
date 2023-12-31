@@ -35,6 +35,14 @@ class Beacon
   public mixed $data;
 
   /**
+   * User supplied metadata that will be a part of the api status.
+   *
+   * Used by clients to pass along a unique value that they need to associate with the request. They
+   * can then find this value in the status response.
+   */
+  public string $meta;
+
+  /**
    * The time the beacon was updated.
    */
   public DateTime $updatedAt;
@@ -50,6 +58,7 @@ class Beacon
     $this->currentStep = $data['currentStep'] ?? 0;
     $this->totalSteps = $data['totalSteps'] ?? 0;
     $this->data = $data['data'] ?? null;
+    $this->meta = $data['meta'];
     $this->updatedAt = new DateTime($data['updatedAt']);
   }
 
@@ -74,6 +83,9 @@ class Beacon
     }
     if (!isset($data['totalSteps'])) {
       throw new Exception('Missing totalSteps');
+    }
+    if (!isset($data['meta'])) {
+      throw new Exception('Missing meta');
     }
     if (!isset($data['updatedAt'])) {
       throw new Exception('Missing updatedAt');
