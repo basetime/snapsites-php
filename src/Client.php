@@ -14,24 +14,9 @@ class Client
   const BASE_URL = 'http://dev-api.snapsites.io';
 
   /**
-   * The API secret created when the endpoint was created.
-   */
-  protected string $apiSecret;
-
-  /**
    * Whether to enable debugging.
    */
   protected bool $debugging = false;
-
-  /**
-   * Constructor.
-   *
-   * @param string $apiSecret
-   */
-  public function __construct(string $apiSecret)
-  {
-    $this->apiSecret = $apiSecret;
-  }
 
   /**
    * Sets whether debugging is enabled.
@@ -49,7 +34,7 @@ class Client
    * the screenshots before returning.
    *
    * ```php
-   * $resp = $client->screenshotWait('dyNmcmgxd4BFmuffdwCBV0', new ApiRequest([
+   * $resp = $client->screenshotWait('dyNmcmgxd4BFmuffdwCBV0', '123', new ApiRequest([
    *    'browser': 'chromium',
    *    'url': 'https://avagate.com',
    *    'type': 'jpg',
@@ -72,14 +57,16 @@ class Client
    * ```
    *
    * @param string $endpoint The ID of the endpoint to use.
+   * @param string $apiSecret The API secret created when the endpoint was created.
    * @param ApiRequest $req The details of the page to screenshot.
    * @throws GuzzleException
    */
-  public function screenshotWait(string $endpoint, ApiRequest $req): ApiResponse
+  public function screenshotWait(string $endpoint, string $apiSecret, ApiRequest $req): ApiResponse
   {
     $resp = $this->doRequest(
       'POST',
       sprintf('/%s?wait=1', $endpoint),
+      $apiSecret,
       $this->createDefaultRequest($req)
     );
 
@@ -93,7 +80,7 @@ class Client
    * be used to check the status of the request.
    *
    * ```php
-   *  $resp = $client->screenshot('dyNmcmgxd4BFmuffdwCBV0', new ApiRequest([
+   *  $resp = $client->screenshot('dyNmcmgxd4BFmuffdwCBV0', '123', new ApiRequest([
    *     'browser': 'chromium',
    *     'url': 'https://avagate.com',
    *     'type': 'jpg',
@@ -112,15 +99,17 @@ class Client
    *  ```
    *
    * @param string $endpoint The ID of the endpoint to use.
+   * @param string $apiSecret The API secret created when the endpoint was created.
    * @param ApiRequest $req The details of the page to screenshot.
    * @return ApiResponse
    * @throws GuzzleException
    */
-  public function screenshot(string $endpoint, ApiRequest $req): ApiResponse
+  public function screenshot(string $endpoint, string $apiSecret, ApiRequest $req): ApiResponse
   {
     $resp = $this->doRequest(
       'POST',
       sprintf('/%s?wait=0', $endpoint),
+      $apiSecret,
       $this->createDefaultRequest($req)
     );
 
@@ -132,7 +121,7 @@ class Client
    * the screenshots before returning.
    *
    * ```php
-   * $resp = $client->batchScreenshotsWait('dyNmcmgxd4BFmuffdwCBV0', [
+   * $resp = $client->batchScreenshotsWait('dyNmcmgxd4BFmuffdwCBV0', '123', [
    *    new ApiRequest([
    *      url: 'https://avagate.com/splash-1',
    *      type: 'jpg',
@@ -161,10 +150,11 @@ class Client
    * ```
    *
    * @param string $endpoint The ID of the endpoint to use.
+   * @param string $apiSecret The API secret created when the endpoint was created.
    * @param ApiRequest[] $req The details of the page to screenshot.
    * @throws GuzzleException
    */
-  public function batchScreenshotsWait(string $endpoint, array $req): ApiResponse
+  public function batchScreenshotsWait(string $endpoint, string $apiSecret, array $req): ApiResponse
   {
     $body = [];
     foreach ($req as $k => $r) {
@@ -173,6 +163,7 @@ class Client
     $resp = $this->doRequest(
       'POST',
       sprintf('/%s?wait=1', $endpoint),
+      $apiSecret,
       $body
     );
 
@@ -186,11 +177,12 @@ class Client
    * be used to check the status of the request.
    *
    * @param string $endpoint
+   * @param string $apiSecret The API secret created when the endpoint was created.
    * @param array $req
    * @return ApiResponse
    * @throws GuzzleException
    */
-  public function batchScreenshots(string $endpoint, array $req): ApiResponse
+  public function batchScreenshots(string $endpoint, string $apiSecret, array $req): ApiResponse
   {
     $body = [];
     foreach ($req as $k => $r) {
@@ -199,6 +191,7 @@ class Client
     $resp = $this->doRequest(
       'POST',
       sprintf('/%s?wait=0', $endpoint),
+      $apiSecret,
       $body
     );
 
@@ -209,14 +202,15 @@ class Client
    * Gets the status of the given api request.
    *
    * @param string $endpoint The ID of the endpoint to use.
+   * @param string $apiSecret The API secret created when the endpoint was created.
    * @param string $id The ID of the request to get the status of.
    * @return ApiStatus
    * @throws GuzzleException
    * @throws Exception
    */
-  public function status(string $endpoint, string $id): ApiStatus
+  public function status(string $endpoint, string $apiSecret, string $id): ApiStatus
   {
-    $resp = $this->doRequest('GET', sprintf('/%s/status/%s', $endpoint, $id));
+    $resp = $this->doRequest('GET', sprintf('/%s/status/%s', $endpoint, $id), $apiSecret);
 
     return new ApiStatus($resp);
   }
@@ -225,20 +219,49 @@ class Client
    * Gets the status of all api requests.
    *
    * @param string $endpoint The ID of the endpoint to use.
+   * @param string $apiSecret The API secret created when the endpoint was created.
    * @param int $limit The number of statuses to return.
    * @param int $offset The offset to start at.
    * @throws GuzzleException
    * @throws Exception
    */
-  public function statusAll(string $endpoint, int $limit = 25, int $offset = 0): array
+  public function statusAll(string $endpoint, string $apiSecret, int $limit = 25, int $offset = 0): array
   {
-    $resp = $this->doRequest('GET', sprintf('/%s/status?limit=%d&offset=%d', $endpoint, $limit, $offset));
+    $resp = $this->doRequest('GET', sprintf('/%s/status?limit=%d&offset=%d', $endpoint, $limit, $offset), $apiSecret);
     $statuses = [];
     foreach($resp as $data) {
       $statuses[] = new PartialApiStatus($data);
     }
 
     return $statuses;
+  }
+
+  /**
+   * Returns a value indicating whether the given webhook id and token are valid.
+   *
+   * @param string $id The webhook ID.
+   * @param string $token The webhook token.
+   * @return bool
+   * @throws GuzzleException
+   */
+  public function verifyWebhook(string $id, string $token): bool
+  {
+    $options = [
+      RequestOptions::HTTP_ERRORS => false,
+      RequestOptions::JSON => [
+        'id' => $id,
+        'token' => $token
+      ]
+    ];
+
+    $client = new GuzzleClient();
+    $resp = $client->request('POST', self::BASE_URL . '/webhook/verify', $options);
+    if ($resp->getStatusCode() !== 200) {
+      return false;
+    }
+
+    $body = json_decode($resp->getBody(), true);
+    return $body['valid'] ?? false;
   }
 
   /**
@@ -294,11 +317,11 @@ class Client
   /**
    * @throws GuzzleException
    */
-  protected function doRequest(string $method, string $path, array $body = [])
+  protected function doRequest(string $method, string $path, string $apiSecret, array $body = [])
   {
     $options = [
-      'headers' => [
-        'X-Api-Secret' => $this->apiSecret
+      RequestOptions::HEADERS => [
+        'X-Api-Secret' => $apiSecret
       ]
     ];
     if ($body) {

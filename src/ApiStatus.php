@@ -64,6 +64,11 @@ class ApiStatus {
   public array $request;
 
   /**
+   * @var array
+   */
+  public array $results;
+
+  /**
    * @var string[]
    */
   public array $images;
@@ -92,6 +97,7 @@ class ApiStatus {
     $this->createdAt = new DateTime($data['createdAt']);
     $this->completedAt = new DateTime($data['completedAt']);
     $this->logs = $data['logs'];
+    $this->results = $data['results'];
     $this->request = $data['request'];
     $this->images = $data['images'];
     $this->pdfs = $data['pdfs'];
@@ -117,6 +123,7 @@ class ApiStatus {
       'createdAt',
       'completedAt',
       'logs',
+      'results',
       'request',
       'images',
       'pdfs',

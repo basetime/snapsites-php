@@ -21,8 +21,8 @@ use Basetime\Snapsites\ApiRequest;
 
 $apiSecret = '123';
 $endpoint = 'dyNmcmgxd4BFmuffdwCBV0';
-$client = new Client($apiSecret);
-$resp = $client->screenshotWait($endpoint, new ApiRequest([
+$client = new Client();
+$resp = $client->screenshotWait($endpoint, $apiSecret, new ApiRequest([
     'url': 'https://avagate.com',
     'type': 'jpg',
 ]));
@@ -56,8 +56,8 @@ use Basetime\Snapsites\ApiRequest;
 
 $apiSecret = '123';
 $endpoint = 'dyNmcmgxd4BFmuffdwCBV0';
-$client = new Client($apiSecret);
-$resp = $client->batchScreenshotsWait($endpoint, [
+$client = new Client();
+$resp = $client->batchScreenshotsWait($endpoint, $apiSecret, [
     new ApiRequest([
         'browser': 'firefox',
         'url': 'https://avagate.com',
@@ -96,8 +96,8 @@ Instead of waiting for snapsites to finish generating the screenshot, you can po
 ```php
 $apiSecret = '123';
 $endpoint = 'dyNmcmgxd4BFmuffdwCBV0';
-$client = new Client($apiSecret);
-$resp = $client->screenshot($endpoint, new ApiRequest([
+$client = new Client();
+$resp = $client->screenshot($endpoint, $apiSecret, new ApiRequest([
     'url': 'https://avagate.com',
     'type': 'jpg',
 ]));

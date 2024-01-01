@@ -6,10 +6,10 @@ use Basetime\Snapsites\Client;
 use Basetime\Snapsites\ApiRequest;
 use GuzzleHttp\Exception\GuzzleException;
 
-$client = new Client('123');
+$client = new Client();
 $client->setDebugging(true);
 try {
-  $resp = $client->screenshot('dyNmcmgxd4BFmuffdwCBV0', new ApiRequest([
+  $resp = $client->screenshot('dyNmcmgxd4BFmuffdwCBV0', '123', new ApiRequest([
     'browser' => 'chromium',
     'url' => 'https://avagate.com',
     'type' => 'jpg',
